@@ -1,0 +1,17 @@
+[
+  {
+    "name": "kickflip",
+    "model": "kickflip.glb",
+    "difficulty": "Intermediate"
+  },
+  {
+    "name": "heelflip",
+    "model": "heelflip.glb",
+    "difficulty": "Intermediate"
+  },
+  {
+    "name": "ollie",
+    "model": "ollie.glb",
+    "difficulty": "Beginner"
+  }
+]
