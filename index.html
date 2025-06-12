@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Skate Trick Visualizer</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <header>
@@ -12,17 +12,54 @@
   </header>
 
   <div class="controls">
-    <input type="text" id="searchInput" placeholder="Search a trick..." />
-    <button id="searchBtn">Search</button>
+    <input list="trickSuggestions" id="homeSearchInput" placeholder="Search a trick..." />
+    <datalist id="trickSuggestions">
+      <option value="kickflip" />
+      <option value="heelflip" />
+      <option value="treflip" />
+      <option value="bs kickflip" />
+      <option value="varial kickflip" />
+      <option value="noseslide" />
+      <option value="feeble" />
+      <option value="indy" />
+      <option value="rock to fakie" />
+      <option value="axle stall" />
+    </datalist>
+    <button id="homeSearchBtn">Search</button>
   </div>
 
-  <div id="viewer-container">
-    <p>Select a trick to see it in 3D</p>
-    <!-- This will be where the Three.js canvas goes -->
+  <div class="category-list">
+    <a href="flatground.html" class="category-card">Flatground</a>
+    <a href="ledges.html" class="category-card">Ledges</a>
+    <a href="rails.html" class="category-card">Rails</a>
+    <a href="transition.html" class="category-card">Transition</a>
+    <a href="grabs.html" class="category-card">Grabs</a>
+    <a href="freestyle.html" class="category-card">Freestyle</a>
   </div>
 
-  <script type="module" src="main.js"></script>
+  <script>
+    const map = {
+      flatground: ['kickflip', 'bs kickflip', 'heelflip', 'treflip', 'varial kickflip'],
+      ledges: ['noseslide', 'crook'],
+      rails: ['boardslide', 'feeble'],
+      transition: ['rock to fakie', 'axle stall'],
+      grabs: ['indy', 'melon'],
+      freestyle: ['casper', 'manual']
+    };
 
+    document.getElementById('homeSearchBtn').addEventListener('click', () => {
+      const input = document.getElementById('homeSearchInput').value.trim().toLowerCase();
+      if (!input) return;
 
+      for (const [category, keywords] of Object.entries(map)) {
+        if (keywords.some(kw => input.includes(kw))) {
+          window.location.href = `${category}.html?search=${encodeURIComponent(input)}`;
+          return;
+        }
+      }
+
+      alert("No matching category found.");
+    });
+  </script>
 </body>
 </html>

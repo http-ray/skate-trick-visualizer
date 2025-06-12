@@ -1,77 +1,94 @@
 import * as THREE from 'https://esm.sh/three@0.152.0';
 import { GLTFLoader } from 'https://esm.sh/three@0.152.0/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from 'https://esm.sh/three@0.152.0/examples/jsm/controls/OrbitControls.js';
 
 const viewer = document.getElementById('viewer-container');
-const searchBtn = document.getElementById('searchBtn');
+const trickButtons = document.querySelectorAll('.trick-button');
 const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
 
-let trickData = [];
+// Click-based load
+trickButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const trick = button.dataset.trick;
+    loadViewer(trick);
+  });
+});
 
-let scene, camera, renderer, loader, controls;
+// Search-based load
+if (searchBtn && searchInput) {
+  searchBtn.addEventListener('click', () => {
+    const input = searchInput.value.trim().toLowerCase();
+    if (input) loadViewer(input);
+  });
+}
 
-function initViewer() {
-  // Clear old canvas if it exists
-  const oldCanvas = document.querySelector('canvas');
-  if (oldCanvas) oldCanvas.remove();
+function loadViewer(trickName) {
+  viewer.classList.remove('hidden');
+  viewer.innerHTML = '';
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x222222);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset Viewer';
+  resetBtn.style.margin = '10px';
+  resetBtn.onclick = () => {
+    viewer.innerHTML = '';
+    viewer.classList.add('hidden');
+  };
+  viewer.appendChild(resetBtn);
 
-  camera = new THREE.PerspectiveCamera(75, viewer.clientWidth / viewer.clientHeight, 0.1, 1000);
-  camera.position.set(0, 1, 5);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, viewer.clientWidth / viewer.clientHeight, 0.1, 1000);
+  camera.position.set(0, 1, 3);
+  camera.lookAt(0, 0, 0);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+  renderer.setClearColor(0x222222);
   viewer.appendChild(renderer.domElement);
 
-  loader = new GLTFLoader();
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+  scene.add(ambientLight);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(2, 2, 5);
+  scene.add(directionalLight);
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const loader = new GLTFLoader();
+  loader.load(`models/${trickName}.glb`,
+    (gltf) => {
+      gltf.scene.position.set(0, 0, 0);
+      gltf.scene.scale.set(1.5, 1.5, 1.5);
+      scene.add(gltf.scene);
+    },
+    undefined,
+    (error) => {
+      console.error(`❌ Failed to load model: "${trickName}"`, error);
+      const msg = document.createElement('p');
+      msg.textContent = `❌ Could not load model for "${trickName}".`;
+      msg.style.color = 'red';
+      viewer.appendChild(msg);
+    }
+  );
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 10, 7.5);
-scene.add(directionalLight);
-
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
 
   animate();
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-async function loadTricks() {
-  const response = await fetch('tricks.json');
-  trickData = await response.json();
-}
-
-searchBtn.addEventListener('click', () => {
-  const input = searchInput.value.trim().toLowerCase();
-
-  const match = trickData.find(t => t.name.toLowerCase() === input);
-
-  if (match) {
-  viewer.innerHTML = ''; // clear previous content
-  initViewer();
-
-  loader.load(`models/${match.model}`, (gltf) => {
-    scene.add(gltf.scene);
-  }, undefined, (error) => {
-    console.error('Error loading model:', error);
-    viewer.innerHTML = `<p>Failed to load 3D model for "${match.name}"</p>`;
+// Highlight matching trick if URL search param exists
+const urlParams = new URLSearchParams(window.location.search);
+const searchTerm = urlParams.get('search');
+if (searchTerm) {
+  const allTricks = document.querySelectorAll('.trick-button');
+  allTricks.forEach(trick => {
+    const name = trick.textContent.toLowerCase();
+    if (name.includes(searchTerm)) {
+      trick.style.outline = '2px solid #0ff';
+      trick.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      trick.style.opacity = '0.3';
+    }
   });
-  
-    // 3D model loading will go here later
-  } else {
-    viewer.innerHTML = `<p>No trick found for "${input}"</p>`;
-  }
-});
-
-// Load trick data on page load
-window.onload = loadTricks;
+}

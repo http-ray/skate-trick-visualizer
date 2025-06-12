@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rail Tricks</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Rail Tricks</h1>
+    <a href="index.html">← Back to Categories</a>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search a trick..." />
+    <button id="searchBtn">Search</button>
+  </div>
+
+  <div class="trick-list">
+    <div class="trick-button" data-trick="boardslide">Boardslide</div>
+    <div class="trick-button" data-trick="feeble">Feeble Grind</div>
+    <div class="trick-button" data-trick="50-50">50-50 Grind</div>
+  </div>
+
+  <div id="viewer-container" class="hidden"></div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

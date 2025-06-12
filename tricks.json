@@ -1,17 +1,17 @@
 [
-  {
-    "name": "kickflip",
-    "model": "kickflip.glb",
-    "difficulty": "Intermediate"
-  },
-  {
-    "name": "heelflip",
-    "model": "heelflip.glb",
-    "difficulty": "Intermediate"
-  },
-  {
-    "name": "ollie",
-    "model": "ollie.glb",
-    "difficulty": "Beginner"
-  }
+  { "name": "Kickflip", "model": "kickflip.glb", "category": "Flatground" },
+  { "name": "Varial Kickflip", "model": "varial_kickflip.glb", "category": "Flatground" },
+  { "name": "Frontside Kickflip", "model": "fs_kickflip.glb", "category": "Flatground" },
+  { "name": "Nose Slide", "model": "noseslide.glb", "category": "Ledges" },
+  { "name": "Boardslide", "model": "boardslide.glb", "category": "Rails" },
+  { "name": "Rock to Fakie", "model": "rock_to_fakie.glb", "category": "Transition" },
+  { "name": "Indy Grab", "model": "indy_grab.glb", "category": "Grabs" },
+  { "name": "Casper Flip", "model": "casper_flip.glb", "category": "Freestyle" },
+  { "name": "Ollie", "model": "ollie.glb", "category": "Flatground" },
+  { "name": "Nollie", "model": "nollie.glb", "category": "Flatground" },
+  { "name": "Fakie Flip", "model": "fakie_flip.glb", "category": "Flatground" },
+  { "name": "Heelflip", "model": "heelflip.glb", "category": "Flatground" },
+  { "name": "Frontside 180", "model": "fs180.glb", "category": "Flatground" },
+  { "name": "Backside 180", "model": "bs180.glb", "category": "Flatground" },
+  { "name": "Pop Shuvit", "model": "shuvit.glb", "category": "Flatground" }
 ]
